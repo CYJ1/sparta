@@ -62,11 +62,13 @@
                 alert("'010-0000-0000'의 형태로 입력해주세요")
                 return;
             }
+            else{
+                alert("주문 완료!!")
+            }
         }
 
         function isCellPhone(p) {
-            p = p.split('-').join('');
-            var regPhone = /^((01[1|6|7|8|9])[1-9]+[0-9]{6,7}) && (010[1-9][0-9]{7})$/;
+            var regPhone = /^01(0|1|[6-9]?)-([0-9]{3,4})-([0-9]{4})$/
             return regPhone.test(p);
         }
 
