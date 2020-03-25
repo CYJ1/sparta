@@ -42,6 +42,13 @@
             let count = $('#order_count option:selected').val();
             let address = $('#order_address').val();
             let phone = $('#order_phone').val();
+            let template = `<tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>`
+
             if (name == '') {
                 alert('이름을 입력해주세요')
                 return;
@@ -53,7 +60,7 @@
             if (address == '') {
                 alert('주소를 입력해주세요')
                 return;
-            }N
+            }
             if (phone == '') {
                 alert('휴대폰번호를 입력해주세요')
                 return;
@@ -62,9 +69,11 @@
                 alert("'010-0000-0000'의 형태로 입력해주세요")
                 return;
             }
-            else{
+            else {
                 alert("주문 완료!!")
+                
             }
+
         }
 
         function isCellPhone(p) {
