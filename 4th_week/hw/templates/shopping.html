@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Webpage Title -->
+    <title>Product Sale</title>
+
+    <!-- JQuery를 import 합니다 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <!-- 구글폰트 -->
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/shopping.css') }}">
+
+    <script>
+        function order() {
+            let name = $('#order_name').val();
+            let count = $('#order_count option:selected').val();
+            let address = $('#order_address').val();
+            let phone = $('#order_phone').val();
+
+            if (name == '') {
+                alert('이름을 입력해주세요')
+                $("#order_name").focus();
+                return;
+            }
+            if (count == '') {
+                alert('수량을 선택해주세요')
+                $("#order_count").focus();
+                return;
+            }
+            if (address == '') {
+                alert('주소를 입력해주세요')
+                $("#order_address").focus();
+                return;
+            }
+            if (phone == '') {
+                alert('휴대폰번호를 입력해주세요')
+                $("#order_phone").focus();
+                return;
+            }
+            else if (!isCellPhone(phone)) {
+                alert("'010-0000-0000'의 형태로 입력해주세요")
+                $("#order_phone").focus();
+                return;
+            }
+
+            $.ajax({
+                type: 'POST', // 타입을 작성합니다.
+                url: '/shopping', // url을 작성합니다.
+                data: {
+                    'name': name,
+                    'count': count,
+                    'address': address,
+                    'phone': phone
+                }, // data 작성
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert(response['msg']);
+                        window.location.reload();//새로고침
+                    }
+                }
+            });
+
+        }
+
+        function isCellPhone(p) {
+            var regPhone = /^01(0|1|[6-9]?)-([0-9]{3,4})-([0-9]{4})$/
+            return regPhone.test(p);
+        }
+
+        $(document).ready(function () {
+            $('#order_table').html('');
+            listing();
+        });
+
+        function listing() {
+            $.ajax({
+                type: "GET",
+                url: "/shopping",
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert(response['msg']);
+                        for (let i = 0; i < response['shopping'].length; i++) {
+                            let shopping = response['shopping'][i];
+                            make_card(shopping['name'], shopping['count'], shopping['address'], shopping['phone']);
+                        }
+                    } else {
+                        alert('주문목록을 받아오지 못했습니다!');
+                    }
+                }
+            });
+        }
+
+        function make_card(name, count, address, phone) {
+            let template = `<tr>
+                                <td>${name}</td>
+                                <td>${count}</td>
+                                <td>${address}</td>
+                                <td>${phone}</td>
+                            </tr>`
+            $('#order_table').append(template);
+        }
+
+    </script>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="jumbotron title">
+        </div>
+        <div>
+            <p class="lead">
+                <label class="product_title">
+                    MONSTA-X The Code </label> 가격: 13,000원/개
+            </p>
+            <p class="product_desc">
+                몬스타엑스, 다섯 번째 미니앨범 ‘THE CODE’ <br> 시간여행자로 변신한 일곱 청년의 새로운 스토리 ‘DRAMARAMA’ 몬스타엑스표 성장 드라마, 정점에 이를 시간! <br>
+                타임워프 또는 타임슬립은 흔히 생각하는 드라마의 소재지만, 그만큼 가장 매력적으로 이야기를 담아낼 수 있는 장치이기도 하다. <br> 몬스타엑스가 만들어낸 타임워프는 이 세상 어딘가에
+                충분히 있을 법한 마술 같은 판타지로 상상력을 자극하며
+                시간여행자로 변신해 새로운 판타지를 선사한다.<br> 몬스타엑스의 다섯 번째 미니앨범 ‘THE CODE’는 시간으로 얽힌 타임 트래블에서 출발한 이야기가 멤버 각자의 스토리로 이어져 결국
+                하나가 되는 운명적 이야기를 그린다.<br> 성장을 거듭하며 성과를 만들어낸 몬스타엑스가 이제 진정한 하나로 거듭나 드라마틱한 시간을 만들겠다는 의지를 느끼게 한다.<br>
+            </p>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">주문자 이름</span>
+            </div>
+            <input type="text" class="form-control" id="order_name" aria-label="Default"
+                aria-describedby="inputGroup-sizing-default">
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">수량</label>
+            </div>
+            <select class="custom-select" id="order_count">
+                <option value="" disabled selected>--수량을 입력하세요--</option>
+                <option value="1">1개</option>
+                <option value="2">2개</option>
+                <option value="3">3개</option>
+                <option value="4">4개</option>
+                <option value="5">5개</option>
+                <option value="6">6개</option>
+                <option value="7">7개</option>
+            </select>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default">주소</span>
+            </div>
+            <input type="text" id='order_address' class="form-control" aria-label="Default"
+                aria-describedby="inputGroup-sizing-default">
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default">전화번호</span>
+            </div>
+            <input type="text" id='order_phone' class="form-control" aria-label="Default"
+                aria-describedby="inputGroup-sizing-default">
+        </div>
+        <div class="order">
+            <button onclick="order()" type="button" class="btn btn-primary">주문하기</button>
+        </div>
+
+        <table class="table order" id="order">
+            <thead>
+                <tr>
+                    <th scope="col">이름</th>
+                    <th scope="col">수량</th>
+                    <th scope="col">주소</th>
+                    <th scope="col">전화번호</th>
+                </tr>
+            </thead>
+            <tbody id="order_table">
+                <tr>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</body>
+
+</html>
